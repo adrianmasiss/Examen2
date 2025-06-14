@@ -19,12 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private UserRepository userRepository; // <- NECESARIO para UserDetailsService
+    private UserRepository userRepository;
 
 
 
-
-    // Inyección de UserDetailsService
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {

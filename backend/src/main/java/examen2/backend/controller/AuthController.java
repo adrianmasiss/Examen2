@@ -15,7 +15,7 @@ public class AuthController {
     private UserRepository userRepo;
 
     @Autowired
-    private JwtService jwtService; // O JwtUtil si tu clase se llama así
+    private JwtService jwtService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;

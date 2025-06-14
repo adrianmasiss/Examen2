@@ -17,7 +17,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    // Inyección por constructor (Spring lo arma cuando lo declaras como Bean)
     public JwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
@@ -36,7 +35,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 username = jwtService.extractUsername(token);
             } catch (ExpiredJwtException e) {
-                // Token expirado, manejar si lo deseas
             }
         }
 

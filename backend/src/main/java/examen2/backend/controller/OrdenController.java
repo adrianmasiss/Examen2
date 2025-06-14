@@ -48,7 +48,6 @@ public class OrdenController {
         }
         Orden orden = new Orden(usuario, detalles, total);
         ordenRepo.save(orden);
-        // Imprimir en consola
         System.out.println("ORDEN #" + orden.getId() + " Usuario: " + usuario.getNombre() + " Total: " + total);
         return new OrdenResponse(orden.getId());
     }

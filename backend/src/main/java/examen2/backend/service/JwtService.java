@@ -12,11 +12,10 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // Usa @Value para que puedas cambiar la clave fácilmente desde application.properties
+
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    // Devuelve una clave segura basada en la especificación HS256 (al menos 256 bits)
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
@@ -26,14 +25,14 @@ public class JwtService {
                 .setSubject(username)
                 .claim("rol", rol)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // OJO: Cambiado a usar Key
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()) // Cambiado: parserBuilder + Key
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -46,7 +45,7 @@ public class JwtService {
 
     public boolean isTokenExpired(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()) // Cambiado: parserBuilder + Key
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
