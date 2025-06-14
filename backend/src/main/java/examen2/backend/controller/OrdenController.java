@@ -8,6 +8,7 @@ import examen2.backend.logic.Orden;
 import examen2.backend.logic.Platillo;
 import examen2.backend.logic.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -26,11 +27,16 @@ public class OrdenController {
 
     @PostMapping
     public OrdenResponse crearOrden(@RequestBody OrdenRequest req) {
-        User usuario = userRepo.findByUsername(req.getUsuario());
+        // Obtener el usuario autenticado desde el contexto de seguridad
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User usuario = userRepo.findByUsername(username);
+        if (usuario == null) throw new RuntimeException("Usuario autenticado no encontrado: " + username);
+
         List<DetalleOrden> detalles = new ArrayList<>();
         int total = 0;
         for (DetalleRequest d : req.getDetalles()) {
-            Platillo platillo = platilloRepo.findById(d.getPlatilloId()).orElseThrow();
+            Platillo platillo = platilloRepo.findById(d.getPlatilloId()).orElseThrow(() ->
+                    new RuntimeException("Platillo no encontrado con id: " + d.getPlatilloId()));
             int precioUnit = platillo.getPrecio();
             if ("Grande".equalsIgnoreCase(d.getTamano())) {
                 precioUnit = (int) Math.round(precioUnit * 1.2);
@@ -47,15 +53,11 @@ public class OrdenController {
         return new OrdenResponse(orden.getId());
     }
 
-    // DTO para la solicitud de orden
+    // DTO para la solicitud de orden (ya no incluye usuario)
     public static class OrdenRequest {
-        private String usuario;
         private List<DetalleRequest> detalles;
 
         public OrdenRequest() {}
-
-        public String getUsuario() { return usuario; }
-        public void setUsuario(String usuario) { this.usuario = usuario; }
 
         public List<DetalleRequest> getDetalles() { return detalles; }
         public void setDetalles(List<DetalleRequest> detalles) { this.detalles = detalles; }

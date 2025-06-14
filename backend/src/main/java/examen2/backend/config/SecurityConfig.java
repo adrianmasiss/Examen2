@@ -1,26 +1,30 @@
 package examen2.backend.config;
 
+import examen2.backend.config.JwtAuthFilter;
 import examen2.backend.data.UserRepository;
 import examen2.backend.logic.User;
+import examen2.backend.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository; // <- NECESARIO para UserDetailsService
 
+
+
+
+    // Inyección de UserDetailsService
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
@@ -35,19 +39,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public JwtAuthFilter jwtAuthFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new JwtAuthFilter(jwtService, userDetailsService);
+    }
+
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/categorias", "/api/platillos/**").authenticated()
-                .requestMatchers("/api/ordenes").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic();
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/categorias", "/api/platillos/**", "/api/ordenes").authenticated()
+                        .anyRequest().permitAll()
+                );
         return http.build();
     }
 }
