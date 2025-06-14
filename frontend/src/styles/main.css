@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #f6f6f6;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: #f4f7fa;
     margin: 0;
+    color: #333;
 }
 
 .app-container {
@@ -11,12 +14,14 @@ body {
 }
 
 .main-header {
-    background: #1e354c;
+    background: linear-gradient(90deg, #1e354c, #2b4f6c);
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px 32px;
+    box-shadow: 0 2px 8px #0002;
+    border-bottom: 4px solid #e94f37;
 }
 
 .logo {
@@ -29,6 +34,13 @@ nav a {
     text-decoration: none;
     margin-right: 24px;
     font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: #e94f37;
 }
 
 .user-info {
@@ -46,15 +58,23 @@ nav a {
     cursor: pointer;
     font-weight: bold;
     margin-left: 12px;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.login-btn:hover, .logout-btn:hover {
+    background: #c9402f;
+    transform: scale(1.05);
 }
 
 .main-footer {
     background: #1e354c;
-    color: #bbb;
+    color: #ccc;
     text-align: center;
-    padding: 10px;
+    padding: 15px;
     margin-top: auto;
-    font-size: 15px;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+    border-top: 4px solid #e94f37;
 }
 
 .inicio-container {
@@ -62,6 +82,7 @@ nav a {
     flex-direction: column;
     align-items: center;
     margin-top: 40px;
+    text-align: center;
 }
 
 .inicio-container h1 {
@@ -109,12 +130,13 @@ nav a {
     border-radius: 7px;
     margin-bottom: 7px;
     font-size: 1.07em;
-    transition: background 0.15s;
+    transition: background 0.15s, transform 0.1s;
 }
 
 .categorias li.cat-sel, .categorias li:hover {
     background: #1e354c;
     color: white;
+    transform: scale(1.02);
 }
 
 .platillos {
@@ -144,6 +166,12 @@ nav a {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.platillo-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 14px #0002;
 }
 
 .platillo-info {
@@ -157,10 +185,11 @@ nav a {
 .platillo-card p {
     margin: 0 0 10px 0;
     font-size: 0.98em;
+    color: #444;
 }
 
 .precios {
-    font-size: 0.98em;
+    font-size: 0.95em;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -174,7 +203,7 @@ nav a {
     cursor: pointer;
     margin-left: 9px;
     align-self: center;
-    transition: background 0.13s;
+    transition: background 0.2s ease;
 }
 
 .add-btn:hover {
@@ -232,7 +261,7 @@ nav a {
     font-size: 1.08em;
     border-radius: 9px;
     cursor: pointer;
-    transition: background 0.14s;
+    transition: background 0.14s, transform 0.1s ease;
 }
 
 .comprar-btn:disabled {
@@ -241,17 +270,34 @@ nav a {
     cursor: not-allowed;
 }
 
+.comprar-btn:hover:not(:disabled) {
+    background: #c9402f;
+    transform: scale(1.02);
+}
+
 .orden-msg {
     position: fixed;
     top: 60px;
     right: 28px;
-    background: #e94f37;
+    background: #28a745;
     color: white;
     padding: 15px 27px;
     border-radius: 9px;
     font-size: 1.1em;
     box-shadow: 0 3px 13px #0002;
     z-index: 100;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .popup-overlay {
@@ -275,6 +321,30 @@ nav a {
 
 .popup h2 {
     margin-top: 0;
+    color: #1e354c;
+}
+
+.popup label {
+    display: block;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.popup input, .popup select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.2s;
+}
+
+.popup input:focus, .popup select:focus {
+    outline: none;
+    border-color: #1e354c;
+    box-shadow: 0 0 0 2px #1e354c33;
 }
 
 .close-btn {
@@ -285,6 +355,11 @@ nav a {
     font-size: 1.3em;
     color: #bbb;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+    color: #1e354c;
 }
 
 .submit-btn {
@@ -297,6 +372,7 @@ nav a {
     font-size: 1.08em;
     border-radius: 9px;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 .submit-btn:hover {
@@ -308,4 +384,23 @@ nav a {
     font-size: 1.03em;
     margin-top: 12px;
     text-align: center;
+}
+
+
+.mensaje-popup h2 {
+    color: #1e354c;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.mensaje-popup p {
+    font-size: 1.05em;
+    margin-top: 0;
+    text-align: center;
+}
+
+.mensaje-popup {
+    text-align: center;
+    max-width: 400px;
+    padding: 40px 30px;
 }

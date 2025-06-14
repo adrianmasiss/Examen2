@@ -3,6 +3,8 @@ import CategoriaList from "./CategoriaList";
 import PlatilloList from "./PlatilloList";
 import AgregarPlatilloPopup from "./AgregarPlatilloPopup";
 import Orden from "./Orden";
+import MensajePopup from "./MensajePopup";
+
 
 export default function Menu({ user }) {
     const [categorias, setCategorias] = useState([]);
@@ -65,7 +67,7 @@ export default function Menu({ user }) {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + user.token,
                 },
-                body: JSON.stringify({ usuario: user.nombre, detalles }),
+                body: JSON.stringify({ detalles }),
             });
             if (!res.ok) throw new Error("Error al comprar");
             const data = await res.json();
@@ -97,7 +99,13 @@ export default function Menu({ user }) {
                     onAgregar={agregarAOrden}
                 />
             )}
-            {mensaje && <div className="orden-msg">{mensaje}</div>}
+            {mensaje && (
+                <MensajePopup
+                    mensaje={mensaje}
+                    tipo={mensaje.startsWith("¡Orden procesada") ? "ok" : "error"}
+                    onClose={() => setMensaje(null)}
+                />
+            )}
         </div>
     );
 }
